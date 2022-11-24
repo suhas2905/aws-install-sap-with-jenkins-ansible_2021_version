@@ -17,6 +17,7 @@
 - name: Add tsc to clocksource
   lineinfile:
     owner: root
+    group: root
     name: "{{ system_clocksource_file }}"
     line: "tsc"
     state: present
