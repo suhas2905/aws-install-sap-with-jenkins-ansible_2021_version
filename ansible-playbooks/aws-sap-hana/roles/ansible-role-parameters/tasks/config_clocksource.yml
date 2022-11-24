@@ -15,8 +15,8 @@
   when: not stat_result.stat.exists
 
 - name: Add tsc to clocksource
+  become_user: root
   lineinfile:
-    become_user: root
     name: "{{ system_clocksource_file }}"
     line: "tsc"
     state: present
