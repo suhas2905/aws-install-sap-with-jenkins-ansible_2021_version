@@ -37,8 +37,8 @@
   become: true
   hosts: all
   roles:
-    - role: ansible-role-parameters
     - role: ansible-role-disks
+    - role: ansible-role-parameters
 
 # RedHat official roles for preparing for SAP Installation
 - name: Prepare host with RedHat certified roles
