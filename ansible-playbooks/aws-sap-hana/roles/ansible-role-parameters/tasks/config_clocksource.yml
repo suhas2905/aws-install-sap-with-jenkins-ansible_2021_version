@@ -15,8 +15,8 @@
   when: not stat_result.stat.exists
 
 - name: Add tsc to clocksource
-  sudo: yes
   lineinfile:
     path: "{{ system_clocksource_file }}"
     line: "tsc"
     state: present
+    ignore_errors: true
