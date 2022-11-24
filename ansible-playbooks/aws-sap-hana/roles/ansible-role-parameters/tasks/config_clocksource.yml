@@ -18,6 +18,6 @@
   lineinfile:
     owner: root
     group: root
-    name: "{{ system_clocksource_file }}"
+    path: "{{ system_clocksource_file }}"
     line: "tsc"
     state: present
