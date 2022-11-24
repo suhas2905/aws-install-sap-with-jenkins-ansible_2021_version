@@ -16,6 +16,7 @@
 
 - name: Add tsc to clocksource
   lineinfile:
+    become: yes
     name: "{{ system_clocksource_file }}"
     line: "tsc"
     state: present
