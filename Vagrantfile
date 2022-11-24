@@ -31,9 +31,9 @@ Vagrant.configure(2) do |config|
         sudo python3 -m pip install ansible
         sudo ln -s /usr/local/bin/ansible-playbook /usr/bin/ansible-playbook
         
-        # Clone the repo
+        # Clone the repo the Main repo
         sudo rm -rf /home/centos/jenkins
-        sudo git clone https://github.com/aws-samples/aws-install-sap-with-jenkins-ansible.git /home/centos/jenkins
+        sudo git clone https://github.com/ArjunjMishra/aws-install-sap-with-jenkins-ansible.git /home/centos/jenkins
         # Run playbook
         sudo ansible-playbook /home/centos/jenkins/jenkins-as-code/site.yml
         

@@ -188,7 +188,7 @@ jobs:
             source {
               git {
                 id('sap3modules')
-                remote('https://github.com/aws-samples/aws-install-sap-with-jenkins-ansible.git')
+                remote('https://github.com/ArjunjMishra/aws-install-sap-with-jenkins-ansible.git')
               }
             }
             strategy {
@@ -202,7 +202,7 @@ jobs:
           git {
             id('sap3modules')
             includes('*')
-            remote('https://github.com/aws-samples/aws-install-sap-with-jenkins-ansible.git')
+            remote('https://github.com/ArjunjMishra/aws-install-sap-with-jenkins-ansible.git')
           }
         }
       }
@@ -218,7 +218,7 @@ jobs:
             source {
               git {
                 id('destroySAP3modules')
-                remote('https://github.com/aws-samples/aws-install-sap-with-jenkins-ansible')
+                remote('https://github.com/ArjunjMishra/aws-install-sap-with-jenkins-ansible.git')
               }
             }
             strategy {
@@ -232,7 +232,7 @@ jobs:
           git {
             id('destroySAP3modules')
             includes('*')
-            remote('https://github.com/aws-samples/aws-install-sap-with-jenkins-ansible')
+            remote('https://github.com/ArjunjMishra/aws-install-sap-with-jenkins-ansible.git')
           }
         }
       }
