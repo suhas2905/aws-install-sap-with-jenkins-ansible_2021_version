@@ -21,7 +21,7 @@
   shell: 
     cmd: cat {{ hana_passwords_file_full_path }} | {{ hana_installation_file_path }} --action=install --components=client,server --batch --autostart=1 -sid={{ GLOBAL_HANA_SID }}  --hostname={{ THIS_HOSTNAME }} --number={{ GLOBAL_HANA_INSTANCE_NUMBER }}  --read_password_from_stdin=xml
     chdir: "{{ folder_to_run_hana_installation_from }}"
-  no_log: yes
+  #no_log: yes
   register: installation_output
   ignore_errors: yes
 
