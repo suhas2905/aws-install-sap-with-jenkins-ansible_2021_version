@@ -3,15 +3,9 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: MIT-0
 
-<<<<<<< HEAD
 - name: Change permission of /sys folder
   file:
     dest: /sys/devices/system/clocksource/clocksource0/current_clocksource
-=======
-- name: Change permission
-  file:
-    dest: /sys
->>>>>>> origin/dev
     mode: '0755'
 
 - name: Delete /sys/devices/system/clocksource/clocksource0/current_clocksource exists
