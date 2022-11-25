@@ -28,8 +28,8 @@
     dest: /etc/tmpfiles.d/sap.conf
     mode: 0755
 #Commenting and opened a Open issue 1
-- #name: Config clocksource
-  #include_tasks: config_clocksource.yml
+- name: Config clocksource
+  include_tasks: config_clocksource.yml
 
 - name: Copy files
   include_tasks: copy_files.yml
