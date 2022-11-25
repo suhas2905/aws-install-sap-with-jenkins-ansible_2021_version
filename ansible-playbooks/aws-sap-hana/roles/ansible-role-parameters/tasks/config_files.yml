@@ -27,9 +27,9 @@
     src: "{{ role_path }}/files/sap.conf"
     dest: /etc/tmpfiles.d/sap.conf
     mode: 0755
-
-- name: Config clocksource
-  include_tasks: config_clocksource.yml
+#commenting since opened issue 1
+- #name: Config clocksource
+  #include_tasks: config_clocksource.yml
 
 - name: Copy files
   include_tasks: copy_files.yml
