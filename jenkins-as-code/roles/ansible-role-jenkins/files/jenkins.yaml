@@ -155,22 +155,22 @@ credentials:
         - string:
             scope: GLOBAL
             id: "PRODUCT_ID_ASCS"
-            secret: "NW_ABAP_ASCS:S4HANA1909.CORE.HDB.ABAPHA"
+            secret: "NW_ABAP_ASCS:S4HANA2021.CORE.HDB.ABAPHA"
             description: "(Optional) Product ID to install ASCS software. Default: NW_ABAP_ASCS:S4HANA1909.CORE.HDB.ABAPHA"
         - string:
             scope: GLOBAL
             id: "PRODUCT_ID_ERS"
-            secret: "NW_ERS:S4HANA1909.CORE.HDB.ABAPHA"
+            secret: "NW_ERS:S4HANA2021.CORE.HDB.ABAPHA"
             description: "(Optional) Product ID to install ERS software. Default: NW_ERS:S4HANA1909.CORE.HDB.ABAPHA"
         - string:
             scope: GLOBAL
             id: "PRODUCT_ID_PAS_DB"
-            secret: "NW_ABAP_DB:S4HANA1909.CORE.HDB.ABAP"
+            secret: "NW_ABAP_DB:S4HANA2021.CORE.HDB.ABAP"
             description: "(Optional) Product ID to install PAS DB software. Default: NW_ABAP_DB:S4HANA1909.CORE.HDB.ABAP"
         - string:
             scope: GLOBAL
             id: "PRODUCT_ID_PAS"
-            secret: "NW_ABAP_CI:S4HANA1909.CORE.HDB.ABAP"
+            secret: "NW_ABAP_CI:S4HANA2021.CORE.HDB.ABAP"
             description: "(Optional) Product ID to install PAS software. Example: NW_ABAP_CI:S4HANA1909.CORE.HDB.ABAP"
 
 jobs:
