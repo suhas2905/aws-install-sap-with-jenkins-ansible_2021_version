@@ -171,7 +171,7 @@ credentials:
             scope: GLOBAL
             id: "PRODUCT_ID_PAS"
             secret: "NW_ABAP_CI:S4HANA2021.CORE.HDB.ABAP"
-            description: "(Optional) Product ID to install PAS software. Example: NW_ABAP_CI:S4HANA1909.CORE.HDB.ABAP"
+            description: "(Optional) Product ID to install PAS software. Example: NW_ABAP_CI:TESTINGS4HANA1909.CORE.HDB.ABAP"
 
 jobs:
   - script: >
