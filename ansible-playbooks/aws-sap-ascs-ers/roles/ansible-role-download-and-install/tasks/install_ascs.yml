@@ -20,7 +20,7 @@
   shell: 
     cmd: "{{ install_command }}"
     chdir: "{{ ascs_folder_to_run_installation_from }}"
-  no_log: yes
+  #no_log: yes
   register: installation_output
   ignore_errors: yes
   throttle: 1
