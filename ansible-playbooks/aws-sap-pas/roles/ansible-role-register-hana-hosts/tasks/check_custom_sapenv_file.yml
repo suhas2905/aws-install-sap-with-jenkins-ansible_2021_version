@@ -10,6 +10,8 @@
     src: "{{ pas_sapenv_original_path }}"
     dest: "{{ pas_sapenv_custom_path }}"
     remote_src: yes
+    ansible.builtin.command: "false"
+    debugger: on_failed
   when: custom_sapenv_stats.stat.exists is false
 
 - name: Remove all "tset" statements from the file. PS! This is important when calling Ansible from Jenkins

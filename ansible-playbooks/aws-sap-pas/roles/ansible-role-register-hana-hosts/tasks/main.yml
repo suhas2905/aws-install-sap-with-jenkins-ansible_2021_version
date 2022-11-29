@@ -4,7 +4,7 @@
   set_fact: 
     all_instances_hostnames: "{{ all_instances_hostnames | default([]) + [{'node_name' : item.key, 'hostname' : item.value.ansible_hostname, 'ip' : item.value.ansible_default_ipv4.address}]  }}"
   loop: "{{ hostvars | dict2items }}"
-  #no_log: true
+  no_log: true
 
 - name: Check custom sapenv file
   include_tasks: check_custom_sapenv_file.yml
