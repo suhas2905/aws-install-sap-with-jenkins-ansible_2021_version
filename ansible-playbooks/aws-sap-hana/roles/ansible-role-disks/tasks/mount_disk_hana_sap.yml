@@ -5,6 +5,8 @@
 
 - name: Get volume types to mount from file
   shell: grep {{ item }} {{ disk_mapping_file_full_path }} | awk '{print $2}'
+  #In case of xvdf
+  #shell: grep {{ item }} {{ disk_mapping_file_full_path }} | awk '{print $2}'
   register: volumes_found
   with_items: "{{ hana_sap_disk_type_pattern }}"
 
