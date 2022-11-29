@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: MIT-0
 
 - name: Get volume types to mount from file
-  shell: grep {{ item }} {{ disk_mapping_file_full_path }} | awk '{print $1}'
+  shell: grep {{ item }} {{ disk_mapping_file_full_path }} | awk '{print $2}'
   register: volumes_found
   with_items: "{{ hana_data_disk_type_pattern }}"
 
