@@ -21,7 +21,7 @@
     chdir: "{{ folder_to_run_pas_installation_from }}"
   register: installation_output
   ignore_errors: yes
-  no_log: yes
+  #no_log: yes
 
 - name: Show errors if they exist
   debug:
