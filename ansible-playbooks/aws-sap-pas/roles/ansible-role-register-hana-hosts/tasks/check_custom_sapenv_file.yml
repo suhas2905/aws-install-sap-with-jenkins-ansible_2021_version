@@ -10,14 +10,14 @@
     src: "{{ pas_sapenv_original_path }}"
     dest: "{{ pas_sapenv_custom_path }}"
     remote_src: yes
-  when: custom_sapenv_stats.stat.exists is false
+  when: custom_sapenv_stats.stat.exists == false
 
 - name: Remove all "tset" statements from the file. PS! This is important when calling Ansible from Jenkins
   lineinfile:
     path: "{{ pas_sapenv_custom_path }}"
     state: absent
     regexp: "tset -I -Q"
-  when: custom_sapenv_stats.stat.exists is false
+  when: custom_sapenv_stats.stat.exists == false
 
 - name: Check if custom dbenv.sh exists
   stat:
@@ -29,11 +29,11 @@
     src: "{{ pas_dbenv_original_path }}"
     dest: "{{ pas_dbenv_custom_path }}"
     remote_src: yes
-  when: custom_sapenv_stats.stat.exists is false
+  when: custom_sapenv_stats.stat.exists == false
 
 - name: Remove all "tset" statements from the file. PS! This is important when calling Ansible from Jenkins
   lineinfile:
     path: "{{ pas_dbenv_custom_path }}"
     state: absent
     regexp: "tset -I -Q"
-  when: custom_sapenv_stats.stat.exists is false
+  when: custom_sapenv_stats.stat.exists == false
