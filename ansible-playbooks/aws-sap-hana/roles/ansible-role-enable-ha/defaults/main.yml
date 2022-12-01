@@ -28,8 +28,8 @@ folders_to_create:
   - "/root/cluster/scripts"
 
 files_to_synchronize:
-  - "/usr/sap/{{ GLOBAL_HANA_SID | upper }}/SYS/global/security/rsecssfs/data/SSFS_AD0.DAT"
-  - "/usr/sap/{{ GLOBAL_HANA_SID | upper }}/SYS/global/security/rsecssfs/key/SSFS_AD0.KEY"
+  - "/usr/sap/{{ GLOBAL_HANA_SID | upper }}/SYS/global/security/rsecssfs/data/SSFS_{{ GLOBAL_HANA_SID | upper }}.DAT"
+  - "/usr/sap/{{ GLOBAL_HANA_SID | upper }}/SYS/global/security/rsecssfs/key/SSFS_{{ GLOBAL_HANA_SID | upper }}.KEY"
 
 pacemaker_hacluster_user_pass: hacluster
 
