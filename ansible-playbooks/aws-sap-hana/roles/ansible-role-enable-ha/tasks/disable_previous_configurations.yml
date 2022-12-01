@@ -2,7 +2,7 @@
 
 - name: Check current replication status of instance
   shell: |
-      source {{ home_path }}; /hana/shared/AD0/HDB00/exe/hdbnsutil -sr_state
+      source {{ home_path }}; /hana/shared/{{ GLOBAL_HANA_SID | upper }}/HDB00/exe/hdbnsutil -sr_state
   args:
     executable: /bin/bash
   register: current_instance_rep_status
