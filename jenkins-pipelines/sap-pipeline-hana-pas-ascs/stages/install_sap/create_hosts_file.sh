@@ -21,8 +21,8 @@ if [ -z "$HOSTS_IPS" ]; then
     exit 100
 fi
 
-public_ips_values=$(echo $HOSTS_IPS | sed "s/\[/\ /g" | sed "s/\]/\ /g" | sed "s/\,/\ /g")
-eval "public_ips_array=($public_ips_values)"
+private_ips_values=$(echo $HOSTS_IPS | sed "s/\[/\ /g" | sed "s/\]/\ /g" | sed "s/\,/\ /g")
+eval "private_ips_array=($private_ips_values)"
 
 # ------------------------------------------------------------------
 # Create hosts_runtime.yml
@@ -37,7 +37,7 @@ echo "" >> $hostsFile
 echo "all:" >> $hostsFile
 echo "  hosts:" >> $hostsFile
 
-for instance_ip in "${public_ips_array[@]}"; do 
+for instance_ip in "${private_ips_array[@]}"; do 
     echo "Adding $instance_ip to $hostsFile"
     echo "    $instance_ip:" >> $hostsFile
     echo "      ansible_host: $instance_ip" >> $hostsFile
