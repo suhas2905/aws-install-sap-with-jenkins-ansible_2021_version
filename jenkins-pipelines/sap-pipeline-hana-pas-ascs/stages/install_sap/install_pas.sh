@@ -13,16 +13,21 @@ if [ -z "$hana_private_ip" ]; then
     echo "No Hana instance private IP was found. Please check Terraform step"
     exit 100
 fi
-
+export HANA_HOSTS_IPS=$hana_private_ip
 ascs_private_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ascs_instance_private_ip | jq -r '.[0]')
 if [ -z "$ascs_private_ip" ]; then
     echo "No ASCS instance private IP was found. Please check Terraform step"
     exit 101
 fi
 
-pas_public_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json app_instance_public_ips | jq -r '.[0]')
-if [ -z "$pas_public_ip" ]; then
-    echo "No PAS instance public IP was found. Please check Terraform step"
+#pas_public_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json app_instance_public_ips | jq -r '.[0]')
+#if [ -z "$pas_public_ip" ]; then
+#    echo "No PAS instance public IP was found. Please check Terraform step"
+#    exit 102
+#fi
+pas_private_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json app_instance_private_ip | jq -r '.[0]')
+if [ -z "$pas_private_ip" ]; then
+    echo "No PAS instance private IP was found. Please check Terraform step"
     exit 102
 fi
 
@@ -32,29 +37,31 @@ if [ -z "$efs_id" ]; then
     exit 103
 fi
 
-hana_public_ips=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_public_ips)
-if [ -z "$hana_public_ips" ]; then
-    echo "No Hana instance IPs were found. Please check Terraform step"
-    exit 100
-fi
-export HANA_HOSTS_IPS=$hana_public_ips
+#hana_public_ips=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_public_ips)
+#if [ -z "$hana_public_ips" ]; then
+#    echo "No Hana instance IPs were found. Please check Terraform step"
+#    exit 100
+#fi
+#export HANA_HOSTS_IPS=$hana_public_ips
 
-public_ips_values=$(echo $HANA_HOSTS_IPS | sed "s/\[/\ /g" | sed "s/\]/\ /g" | sed "s/\,/\ /g")
-eval "public_ips_array=($public_ips_values)"
+private_ips_values=$(echo $HANA_HOSTS_IPS | sed "s/\[/\ /g" | sed "s/\]/\ /g" | sed "s/\,/\ /g")
+eval "private_ips_array=($private_ips_values)"
 
-HANA_PRIMARY_PUBLIC_IP=${public_ips_array[0]}
-HANA_SECONDARY_PUBLIC_IP=${public_ips_array[1]}
+export HANA_HOSTS_IPS=$hana_private_ips
+
+HANA_PRIMARY_PRIVATE_IP=${private_ips_array[0]}
+HANA_SECONDARY_PRIVATE_IP=${private_ips_array[1]}
 
 # ------------------------------------------------------------------
 # Change host destination on hosts.yml file
 # ------------------------------------------------------------------
 hostsFile="$ansiblePASDir/hosts.yml"
 
-sed -i "s/PAS_HOST_NAME_TO_APPLY/$pas_public_ip/g" $hostsFile
+sed -i "s/PAS_HOST_NAME_TO_APPLY/$pas_private_ip/g" $hostsFile
 sed -i "s|PATH_TO_PEM_FILE|$SSH_KEYPAIR_FILE_CHKD|g" $hostsFile
 
-sed -i "s/HANA_PRIM_HOST_NAME_TO_APPLY/$HANA_PRIMARY_PUBLIC_IP/g" $hostsFile
-sed -i "s/HANA_SEC_HOST_NAME_TO_APPLY/$HANA_SECONDARY_PUBLIC_IP/g" $hostsFile
+sed -i "s/HANA_PRIM_HOST_NAME_TO_APPLY/$HANA_PRIMARY_PRIVATE_IP/g" $hostsFile
+sed -i "s/HANA_SEC_HOST_NAME_TO_APPLY/$HANA_SECONDARY_PRIVATE_IP/g" $hostsFile
 
 export VAR_FILE_FULL_PATH="$ansiblePASDir/var_file.yaml"
 rm $VAR_FILE_FULL_PATH 2> /dev/null
