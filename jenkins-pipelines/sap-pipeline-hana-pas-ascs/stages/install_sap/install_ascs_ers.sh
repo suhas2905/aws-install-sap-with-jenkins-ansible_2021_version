@@ -15,22 +15,24 @@ if [ -z "$hana_private_ip" ]; then
     exit 100
 fi
 
-ascs_public_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ascs_instance_public_ips | jq -r '.[0]')
-if [ -z "$ascs_public_ip" ]; then
-    echo "No ASCS instance public IP was found. Please check Terraform step"
-    exit 101
-fi
-ers_public_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ers_instance_public_ips | jq -r '.[0]')
-if [ -z "$ers_public_ip" ]; then
-    echo "No ASCS instance public IP was found. Please check Terraform step"
-    exit 101
-fi
+#ascs_public_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ascs_instance_public_ips | jq -r '.[0]')
+#if [ -z "$ascs_public_ip" ]; then
+#    echo "No ASCS instance public IP was found. Please check Terraform step"
+#    exit 101
+#fi
+#ers_public_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ers_instance_public_ips | jq -r '.[0]')
+#if [ -z "$ers_public_ip" ]; then
+#    echo "No ASCS instance public IP was found. Please check Terraform step"
+#    exit 101
+#fi
 
-export HOSTS_IPS="[$ascs_public_ip,$ers_public_ip]"
+#export HOSTS_IPS="[$ascs_public_ip,$ers_public_ip]"
 
 if [[ "$ENABLE_HA_CHKD" == "true" ]]; then
     ascs_private_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ascs_instance_private_ip | jq -r '.[0]')
     ers_private_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ers_instance_private_ip | jq -r '.[0]')
+    export PRIVATE_IPS_LIST_ASCS=$ascs_private_ip
+    export PRIVATE_IPS_LIST_ERS=$ers_private_ip
 fi
 
 pas_private_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json app_instance_private_ip | jq -r '.[0]')
