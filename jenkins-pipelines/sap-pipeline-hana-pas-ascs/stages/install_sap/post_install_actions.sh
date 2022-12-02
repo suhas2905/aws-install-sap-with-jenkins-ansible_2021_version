@@ -9,27 +9,52 @@ export ANSIBLE_DIR=$post_install_playbook_dir
 # ------------------------------------------------------------------
 # Grab data from Terraform
 # ------------------------------------------------------------------
-hana_public_ips=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_public_ips)
-if [ -z "$hana_public_ips" ]; then
-    echo "No Hana instance IPs were found. Please check Terraform step"
+#hana_public_ips=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_public_ips)
+#if [ -z "$hana_public_ips" ]; then
+#    echo "No Hana instance IPs were found. Please check Terraform step"
+#    exit 100
+#fi
+#export HANA_HOSTS_IPS=$hana_public_ips
+
+#export ASCS_PUBLIC_IP=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ascs_instance_public_ips | jq -r '.[0]')
+#if [ -z "$ASCS_PUBLIC_IP" ]; then
+#    echo "No ASCS instance public IP was found. Please check Terraform step"
+#    exit 101
+#fi
+#export ERS_PUBLIC_IP=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ers_instance_public_ips | jq -r '.[0]')
+#if [ -z "$ERS_PUBLIC_IP" ]; then
+#    echo "No ASCS instance public IP was found. Please check Terraform step"
+#    exit 101
+#fi
+
+#export PAS_PUBLIC_IP=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json app_instance_public_ips | jq -r '.[0]')
+#if [ -z "$PAS_PUBLIC_IP" ]; then
+#    echo "No PAS instance public IP was found. Please check Terraform step"
+#    exit 102
+#fi
+
+hana_private_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_private_ip | jq -r '.[0]')
+if [ -z "$hana_private_ip" ]; then
+    echo "No Hana instance private IP was found. Please check Terraform step"
     exit 100
 fi
-export HANA_HOSTS_IPS=$hana_public_ips
+export HANA_HOSTS_IPS=$hana_private_ips
 
-export ASCS_PUBLIC_IP=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ascs_instance_public_ips | jq -r '.[0]')
-if [ -z "$ASCS_PUBLIC_IP" ]; then
-    echo "No ASCS instance public IP was found. Please check Terraform step"
-    exit 101
-fi
-export ERS_PUBLIC_IP=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ers_instance_public_ips | jq -r '.[0]')
-if [ -z "$ERS_PUBLIC_IP" ]; then
-    echo "No ASCS instance public IP was found. Please check Terraform step"
+export ASCS_PRIVATE_IP=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ascs_instance_private_ips | jq -r '.[0]')
+if [ -z "$ASCS_PRIVATE_IP" ]; then
+    echo "No ASCS instance private IP was found. Please check Terraform step"
     exit 101
 fi
 
-export PAS_PUBLIC_IP=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json app_instance_public_ips | jq -r '.[0]')
-if [ -z "$PAS_PUBLIC_IP" ]; then
-    echo "No PAS instance public IP was found. Please check Terraform step"
+export ERS_PRIVATE_IP=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ers_instance_private_ips | jq -r '.[0]')
+if [ -z "$ERS_PRIVATE_IP" ]; then
+    echo "No ASCS instance private IP was found. Please check Terraform step"
+    exit 101
+fi
+
+export PAS_PRIVATE_IP=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json app_instance_private_ips | jq -r '.[0]')
+if [ -z "$pas_private_ip" ]; then
+    echo "No PAS instance private IP was found. Please check Terraform step"
     exit 102
 fi
 
