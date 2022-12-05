@@ -38,7 +38,7 @@ if [ -z "$efs_id" ]; then
     exit 103
 fi
 
-hana_private_ips=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_private_ips | jq -r '.[0]')
+hana_private_ips=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_private_ip | jq -r '.[0]')
 if [ -z "$hana_private_ips" ]; then
     echo "No Hana instance IPs were found. Please check Terraform step"
     exit 100
