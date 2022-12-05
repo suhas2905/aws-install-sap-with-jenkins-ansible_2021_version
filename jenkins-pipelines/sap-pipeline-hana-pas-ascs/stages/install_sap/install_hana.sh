@@ -18,7 +18,7 @@ export ANSIBLE_DIR=$ansibleHanaDir
 if [[ "$ENABLE_HA_CHKD" == "true" ]]; then
     hana_private_ips=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_private_ip)
     export PRIVATE_IPS_LIST=$hana_private_ips
-    export HOSTS_IPS=$hana_private_ips
+    
 
     hana_overlay_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_overlay_ip)
     if [ -z "$hana_overlay_ip" ]; then
@@ -32,6 +32,7 @@ if [[ "$ENABLE_HA_CHKD" == "true" ]]; then
         exit 105
     fi
 fi
+export HOSTS_IPS=$hana_private_ips
 
 ascs_private_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ascs_instance_private_ip | jq -r '.[0]')
 if [ -z "$ascs_private_ip" ]; then
