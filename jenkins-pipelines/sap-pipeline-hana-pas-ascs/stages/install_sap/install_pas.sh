@@ -20,14 +20,9 @@ if [ -z "$ascs_private_ip" ]; then
     exit 101
 fi
 
-#pas_public_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json app_instance_public_ips | jq -r '.[0]')
-#if [ -z "$pas_public_ip" ]; then
-#    echo "No PAS instance public IP was found. Please check Terraform step"
-#    exit 102
-#fi
 pas_private_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json app_instance_private_ip | jq -r '.[0]')
 if [ -z "$pas_private_ip" ]; then
-    echo "No PAS instance private IP was found. Please check Terraform step"
+    echo "No PAS instance public IP was found. Please check Terraform step"
     exit 102
 fi
 
@@ -37,20 +32,18 @@ if [ -z "$efs_id" ]; then
     exit 103
 fi
 
-hana_private_ips=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_private_ips | jq -r '.[0]')
-if [ -z "$hana_private_ips" ]; then
+hana_private_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_private_ip)
+if [ -z "$hana_private_ip" ]; then
     echo "No Hana instance IPs were found. Please check Terraform step"
     exit 100
 fi
-export HANA_HOSTS_IPS=$hana_private_ips
+export HANA_HOSTS_IPS=$hana_private_ip
 
-private_ips_values=$(echo $HANA_HOSTS_IPS | sed "s/\[/\ /g" | sed "s/\]/\ /g" | sed "s/\,/\ /g")
-eval "private_ips_array=($private_ips_values)"
+private_ip_values=$(echo $HANA_HOSTS_IPS | sed "s/\[/\ /g" | sed "s/\]/\ /g" | sed "s/\,/\ /g")
+eval "private_ip_array=($private_ip_values)"
 
-#export HANA_HOSTS_IPS=$hana_private_ip
-
-HANA_PRIMARY_PRIVATE_IP=${private_ips_array[0]}
-HANA_SECONDARY_PRIVATE_IP=${private_ips_array[1]}
+HANA_PRIMARY_PRIVATE_IP=${private_ip_array[0]}
+HANA_SECONDARY_PRIVATE_IP=${private_ip_array[1]}
 
 # ------------------------------------------------------------------
 # Change host destination on hosts.yml file
