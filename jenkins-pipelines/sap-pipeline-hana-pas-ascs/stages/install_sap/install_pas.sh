@@ -38,12 +38,12 @@ if [ -z "$efs_id" ]; then
     exit 103
 fi
 
-#hana_public_ips=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_public_ips)
-#if [ -z "$hana_public_ips" ]; then
-#    echo "No Hana instance IPs were found. Please check Terraform step"
-#    exit 100
-#fi
-#export HANA_HOSTS_IPS=$hana_public_ips
+hana_private_ips=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_private_ips)
+if [ -z "$hana_private_ips" ]; then
+    echo "No Hana instance IPs were found. Please check Terraform step"
+    exit 100
+fi
+export HANA_HOSTS_IPS=$hana_private_ips
 
 private_ips_values=$(echo $HANA_HOSTS_IPS | sed "s/\[/\ /g" | sed "s/\]/\ /g" | sed "s/\,/\ /g")
 eval "private_ips_array=($private_ips_values)"
