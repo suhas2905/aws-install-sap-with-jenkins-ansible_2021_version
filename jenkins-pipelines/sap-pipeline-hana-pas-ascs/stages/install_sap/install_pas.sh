@@ -47,7 +47,7 @@ fi
 private_ips_values=$(echo $HANA_HOSTS_IPS | sed "s/\[/\ /g" | sed "s/\]/\ /g" | sed "s/\,/\ /g")
 eval "private_ips_array=($private_ips_values)"
 
-export HANA_HOSTS_IPS=$hana_private_ips
+export HANA_HOSTS_IPS=$hana_private_ip
 
 HANA_PRIMARY_PRIVATE_IP=${private_ips_array[0]}
 HANA_SECONDARY_PRIVATE_IP=${private_ips_array[1]}
