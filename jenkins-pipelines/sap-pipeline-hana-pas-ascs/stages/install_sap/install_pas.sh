@@ -13,7 +13,7 @@ if [ -z "$hana_private_ip" ]; then
     echo "No Hana instance private IP was found. Please check Terraform step"
     exit 100
 fi
-export HANA_HOSTS_IPS=$hana_private_ip
+#export HANA_HOSTS_IPS=$hana_private_ip
 ascs_private_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ascs_instance_private_ip | jq -r '.[0]')
 if [ -z "$ascs_private_ip" ]; then
     echo "No ASCS instance private IP was found. Please check Terraform step"
