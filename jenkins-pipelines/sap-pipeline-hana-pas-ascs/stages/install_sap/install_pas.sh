@@ -8,12 +8,12 @@ ansiblePASDir="$PWD/ansible-playbooks/aws-sap-pas"
 # ------------------------------------------------------------------
 # Grab data from Terraform
 # ------------------------------------------------------------------
-hana_private_ips=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_private_ip | jq -r '.[0]')
-if [ -z "$hana_private_ips" ]; then
+hana_private_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_private_ip | jq -r '.[0]')
+if [ -z "$hana_private_ip" ]; then
     echo "No Hana instance private IP was found. Please check Terraform step"
     exit 100
 fi
-export HANA_HOSTS_IPS=$hana_private_ips
+#export HANA_HOSTS_IPS=$hana_private_ips
 
 ascs_private_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ascs_instance_private_ip | jq -r '.[0]')
 if [ -z "$ascs_private_ip" ]; then
