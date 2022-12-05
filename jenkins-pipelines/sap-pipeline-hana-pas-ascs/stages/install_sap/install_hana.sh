@@ -14,7 +14,7 @@ export ANSIBLE_DIR=$ansibleHanaDir
 #    echo "No Hana instance IPs were found. Please check Terraform step"
 #    exit 100
 #fi
-hana_private_ips=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_private_ips)
+hana_private_ips=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json hana_instance_private_ip)
 if [ -z "$hana_private_ips" ]; then
     echo "No Hana instance IPs were found. Please check Terraform step"
    exit 100
