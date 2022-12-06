@@ -23,7 +23,9 @@
 
 - name: Create string for PAS config - Add HANA SID
   set_fact:
-    hdbuserstore_string: "{{ hdbuserstore_string }}@{{ GLOBAL_PAS_SID }}"
+    hdbuserstore_string: "{{ hdbuserstore_string }}@{{ DATABASE_SID }}"
+    # Changed the value for the database SID instead of PAS SID
+    #hdbuserstore_string: "{{ hdbuserstore_string }}@{{ GLOBAL_PAS_SID }}"
 
 - name: Create string for PAS config
   set_fact:
