@@ -12,6 +12,7 @@ rhel_packages:
   - xfsprogs
   - autofs
   - gcc
+  - libstdc++
   - nvme-cli
   - tuned-profiles-sap-hana
   - sapconf
