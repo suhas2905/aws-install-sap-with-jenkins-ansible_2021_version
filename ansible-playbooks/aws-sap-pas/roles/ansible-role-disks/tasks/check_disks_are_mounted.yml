@@ -14,3 +14,4 @@
     - "{{ sap_folder }}"
     - "{{ sapmnt_folder }}"
     - "{{ sap_swap }}"
+    - "{{ trans_folder }}"
