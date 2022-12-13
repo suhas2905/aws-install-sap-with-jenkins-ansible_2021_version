@@ -17,6 +17,14 @@ sapmnt_folder: /sapmnt
 
 disk_mapping_file_full_path: /tmp/diskmap
 
+efs_temporary_filepath: /mnt/efs
+
+efs_folders_to_create:
+  - /mnt/efs/ASCS00
+  - /mnt/efs/ERS10
+  - /mnt/efs/sapmnt
+  - /mnt/efs/trans
+
 folders_to_create:
   - /hana/shared
   - /hana/data

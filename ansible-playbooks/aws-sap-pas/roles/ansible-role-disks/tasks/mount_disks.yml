@@ -12,6 +12,9 @@
 - name: Mount FileSystem SAPMNT
   include_tasks: mount_disk_sapmnt.yml
 
+- name: Mount FileSystem TRANS
+  include_tasks: mount_disk_trans.yml
+
 - name: Mount disks for Swap
   include_tasks: check_swap_enabled.yml
 

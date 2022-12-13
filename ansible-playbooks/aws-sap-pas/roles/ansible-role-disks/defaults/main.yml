@@ -32,6 +32,9 @@ sapmnt_folder: /sapmnt
 sapmnt_symlink_to: /sapmnt/trans
 sapmnt_symlink_from: "{{ sap_folder }}"
 
+#Variable for /usr/sap/trans disk
+trans_folder: /usr/sap/trans
+
 # Variables for mounting SWAP disks
 sap_swap: /swap
 volume_group_swap: vg_swap

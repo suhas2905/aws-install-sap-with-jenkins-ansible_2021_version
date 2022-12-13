@@ -12,6 +12,9 @@ The inbound CIDR for customer has all inbound access.
 #Open Issue 3
 The creations of all the instances are in Public IP.
 
+#Open Issue 4
+ASCS00 and ERS00 EFS filesystem creation
+
 #Known 1
 The Instance type is selected to non-nitro then the disk is created as nvme format.
 
@@ -23,3 +26,13 @@ NW_ERS:S4HANA2021.CORE.HDB.ABAPHA
 
 Known 3
 Modificiation of the description for the version has to be carried out in the code.
+
+Known 4
+/usr/sap/SD1/SYS/exe/uc/linuxx86_64/sapcpe: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.26' not found (required by /usr/sap/SD1/SYS/exe/uc/linuxx86_64/sapcpe)
+3119751 - Linux Requirements for SAP Kernel 754 and for SAP Kernel 788 and higher
+mkdir /usr/sap/lib
+ln -s /opt/rh/SAP/lib64/compat-sap-c++-10.so /usr/sap/lib/libstdc++.so.6
+chown -R sd1adm:sapsys /usr/sap/lib
+
+
+
