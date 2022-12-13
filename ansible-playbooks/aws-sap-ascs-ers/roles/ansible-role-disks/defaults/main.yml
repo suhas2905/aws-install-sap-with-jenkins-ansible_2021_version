@@ -7,6 +7,7 @@ folders_to_create:
   - /usr/sap
   - /sapmnt
   - /upgrade
+  - /usr/sap/trans
 
 regex_to_look_for_disks: "nvme\\w*n1\\b"
 minimum_number_of_mounted_disks_to_search: 3
