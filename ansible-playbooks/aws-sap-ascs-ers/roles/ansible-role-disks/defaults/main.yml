@@ -43,3 +43,7 @@ logical_volume_swap: lv_swap
 
 swap_disk_type_pattern:
   - xvdg
+
+#Variables for ASCS and ERS EFS
+ascs_folder: /usr/sap/SD1/ASCS00
+ers_folder: /usr/sap/SD1/ERS10

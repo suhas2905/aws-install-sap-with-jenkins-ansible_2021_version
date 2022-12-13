@@ -1,0 +1,43 @@
+---
+
+- name: Enable system replication on primary node
+  shell: |
+      source {{ home_path }}; {{ utilities_path }}/hdbnsutil -sr_enable --name={{ ansible_hostname }}
+  when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
+  become: yes
+  become_user: "{{ internal_sid_user }}"
+
+- name: Discover the region for this instance
+  uri:
+    url: http://169.254.169.254/latest/dynamic/instance-identity/document
+    return_content: yes
+    timeout: 10
+  register: returned_region
+  failed_when: returned_region.content is undefined
+
+- name: Filter region found
+  set_fact: region_found="{{ (returned_region.content | from_json).region }}"
+
+- name: Get current AZ from AWS.
+  uri:
+    url: http://169.254.169.254/latest/meta-data/placement/availability-zone
+    return_content: yes
+  register: aws_current_az
+
+- name: Ensure /usr/sap/ASCSXX is mounted
+  mount:
+    name: "{{ ascs_folder }}"
+    src: "{{ GLOBAL_EFS_ID }}.efs.{{ region_found }}.amazonaws.com:/ASCS00"
+    opts: "nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport"
+    state: mounted
+    fstype: nfs
+  when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
+
+- name: Ensure /usr/sap/ERSXX is mounted
+  mount:
+    name: "{{ ers_folder }}"
+    src: "{{ GLOBAL_EFS_ID }}.efs.{{ region_found }}.amazonaws.com:/ERS10"
+    opts: "nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport"
+    state: mounted
+    fstype: nfs
+  when: ansible_default_ipv4.address != GLOBAL_PRIMARY_IP
