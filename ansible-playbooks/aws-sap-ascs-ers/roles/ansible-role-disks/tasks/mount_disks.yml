@@ -15,6 +15,9 @@
 - name: Mount FileSystem TRANS
   include_tasks: mount_disk_trans.yml
 
+- name: Mount FileSystem ASCS and ERS EFS
+  include_tasks: mount_disk_ascs_ers.yml
+
 - name: Mount disks for Swap
   include_tasks: check_swap_enabled.yml
 
