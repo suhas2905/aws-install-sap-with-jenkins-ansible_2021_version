@@ -1,12 +1,5 @@
 ---
 
-- name: Enable system replication on primary node
-  shell: |
-      source {{ home_path }}; {{ utilities_path }}/hdbnsutil -sr_enable --name={{ ansible_hostname }}
-  when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
-  become: yes
-  become_user: "{{ internal_sid_user }}"
-
 - name: Discover the region for this instance
   uri:
     url: http://169.254.169.254/latest/dynamic/instance-identity/document

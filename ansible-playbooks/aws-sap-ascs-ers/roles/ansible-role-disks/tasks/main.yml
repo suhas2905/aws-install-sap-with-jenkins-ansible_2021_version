@@ -14,4 +14,4 @@
 
 - name: Mount disks
   include_tasks: mount_disks.yml
-  #when: all_disks_mounted is not defined or all_disks_mounted|bool == false
+  when: all_disks_mounted is not defined or all_disks_mounted|bool == false
