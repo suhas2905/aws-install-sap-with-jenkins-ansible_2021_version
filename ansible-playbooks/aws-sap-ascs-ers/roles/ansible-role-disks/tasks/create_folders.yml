@@ -8,4 +8,31 @@
     path: "{{ item }}"
     state: directory
     mode: '0755'
-  loop: "{{ folders_to_create }}"
+
+- name: TESTING ASCS with GLOBAL IP
+  file:
+    path: /arjungipascs
+    state: directory
+    mode: '0755'
+  when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
+  
+- name: TESTING ERS with GLOBAL IP
+  file:
+    path: /arjungipers
+    state: directory
+    mode: '0755'
+  when: ansible_default_ipv4.address != GLOBAL_PRIMARY_IP
+
+- name: TESTING ASCS with PRODUCT ID
+  file:
+    path: /arjunproductascs
+    state: directory
+    mode: '0755'
+  when: GLOBAL_PRODUCT_TO_INSTALL == "ASCS"
+
+- name: TESTING ERS with PRODUCT ID
+  file:
+    path: /arjunproducters
+    state: directory
+    mode: '0755'
+  when: GLOBAL_PRODUCT_TO_INSTALL == "ERS"
