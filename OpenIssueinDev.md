@@ -34,5 +34,10 @@ mkdir /usr/sap/lib
 ln -s /opt/rh/SAP/lib64/compat-sap-c++-10.so /usr/sap/lib/libstdc++.so.6
 chown -R sd1adm:sapsys /usr/sap/lib
 
+Known 5
+/usr/sap/trans
+/ASCS
+/ERS
+
 
 
