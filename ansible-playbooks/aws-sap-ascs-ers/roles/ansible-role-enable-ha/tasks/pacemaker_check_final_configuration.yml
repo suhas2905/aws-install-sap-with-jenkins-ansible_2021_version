@@ -19,6 +19,6 @@
   when: '"Failed Resource Actions" in pcs_status.stdout'
 
 #Remove the cluster from maintenance mode
-- name: Remove maintenance
-  command: pcs property set maintenance-mode=false
-  when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
+#- name: Remove maintenance
+#  command: pcs property set maintenance-mode=false
+#  when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
