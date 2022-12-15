@@ -17,6 +17,7 @@
     - /usr/sap
     - /usr/sap/SD1/ERS10
     - /usr/sap/trans
+    - /usr/sap/SD1/ASCS00
 
 - name: Install ERS
   shell: 

@@ -17,6 +17,7 @@
     - /usr/sap
     - /usr/sap/trans
     - /usr/sap/SD1/ASCS00
+    - /usr/sap/SD1/ERS10
 
 - name: Install ASCS
   shell: 
