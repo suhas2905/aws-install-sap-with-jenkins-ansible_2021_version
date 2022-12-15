@@ -13,7 +13,7 @@
 - name: Fail if nodes are not configured
   fail:
     msg: "Configuration for nodes failed. Check the output of pcs status"
-  when: 'not "6 resource instances configured" in pcs_status.stdout'
+  when: 'not "7 resource instances configured" in pcs_status.stdout'
 
 - name: Fail if at least one resource/stonith/constraints/orders configurations failed
   fail:
