@@ -39,5 +39,27 @@ Known 5
 /ASCS
 /ERS
 
+Known 6
+Prepare ERS files has been deleted from the ERS installation prepare_ers_files.yml
+---
+
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
+- name: Copy AD0 exe binaries from sapmnt to ERS folder
+  copy: 
+    src: "{{ ascs_source_sapcontrol_binaries }}"
+    dest: "{{ ers_dest_sapcontrol_binaries }}"
+    remote_src: yes
+
+- name: Fix permissions on folder
+  file:
+    path: "/usr/sap/{{ GLOBAL_ASCS_SID }}"
+    state: directory
+    mode: 0777
+    recurse: yes
+  when: GLOBAL_PRODUCT_TO_INSTALL == "ERS"
+
+
 
 

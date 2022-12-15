@@ -1,0 +1,122 @@
+---
+
+
+- name: Check pcs resources
+  command: pcs resource
+  register: resource_output
+
+#ALERT if the resources are already created
+- name: Alert of already ASCS IP existing configuration
+  fail:
+    msg: "A configuration named {{ ascs_oip_config_name }} was found. This cannot be automatically overriden by Ansible and therefore will be skipped"
+  ignore_errors: yes
+  when: ascs_oip_config_name in resource_output.stdout
+
+- name: Alert of already ERS IP existing configuration
+  fail:
+    msg: "A configuration named {{ ers_oip_config_name }} was found. This cannot be automatically overriden by Ansible and therefore will be skipped"
+  ignore_errors: yes
+  when: ers_oip_config_name in resource_output.stdout
+
+- name: Alert of already ASCS FS existing configuration
+  fail:
+    msg: "A configuration named {{ sapascs_fs_topology_name }} was found. This cannot be automatically overriden by Ansible and therefore will be skipped"
+  ignore_errors: yes
+  when: sapascs_fs_topology_name in resource_output.stdout
+
+- name: Alert of already ASCS instance existing configuration
+  fail:
+    msg: "A configuration named {{ sapascs_config_name }} was found. This cannot be automatically overriden by Ansible and therefore will be skipped"
+  ignore_errors: yes
+  when: sapascs_config_name in resource_output.stdout
+
+- name: Alert of already ERS FS existing configuration
+  fail:
+    msg: "A configuration named {{ sapers_fs_topology_name }} was found. This cannot be automatically overriden by Ansible and therefore will be skipped"
+  ignore_errors: yes
+  when: sapers_fs_topology_name in resource_output.stdout
+
+- name: Alert of already ERS instance existing configuration
+  fail:
+    msg: "A configuration named {{ sapers_config_name }} was found. This cannot be automatically overriden by Ansible and therefore will be skipped"
+  ignore_errors: yes
+  when: sapers_config_name in resource_output.stdout
+
+#Extract the region for the FS
+- name: Discover the region for this instance
+  uri:
+    url: http://169.254.169.254/latest/dynamic/instance-identity/document
+    return_content: yes
+    timeout: 10
+  register: returned_region
+  failed_when: returned_region.content is undefined
+
+- name: Filter region found
+  set_fact: region_found="{{ (returned_region.content | from_json).region }}"
+
+- name: Get current AZ from AWS.
+  uri:
+    url: http://169.254.169.254/latest/meta-data/placement/availability-zone
+    return_content: yes
+  register: aws_current_az
+
+#Put the cluster from maintenance mode
+- name: Put maintenance
+  command: pcs property set maintenance-mode=true
+  when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
+
+# Create the resources
+
+- name: Create ASCS OIP
+  command: pcs resource create {{ ascs_oip_config_name }} aws-vpc-move-ip ip=192.168.10.11 interface=eth0 routing_table={{ GLOBAL_OVERLAY_IP_ROUTE_TABLE_ID }} --group rsc_ASCS00_group
+  when: 
+    - not ascs_oip_config_name in resource_output.stdout
+    - ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
+
+- name: Create ERS OIP
+  command: pcs resource create {{ ers_oip_config_name }} aws-vpc-move-ip ip=192.168.10.12 interface=eth0 routing_table={{ GLOBAL_OVERLAY_IP_ROUTE_TABLE_ID }} --group rsc_ERS10_group
+  when: 
+    - not ers_oip_config_name in resource_output.stdout
+    - ansible_default_ipv4.address != GLOBAL_PRIMARY_IP
+
+- name: Register ASCS FS
+  command: pcs resource create {{ sapascs_fs_topology_name }} Filesystem device={{ GLOBAL_EFS_ID }}.efs.{{ region_found }}.amazonaws.com:/ASCS00 directory=/usr/sap/SD1/ASCS00 fstype=nfs4 options="nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport" force_unmount=safe --group rsc_ASCS00_group
+  when: 
+    - ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
+    - not sapascs_fs_topology_name in resource_output.stdout
+
+- name: Register ERS FS
+  command: pcs resource create {{ sapaers_fs_topology_name }} Filesystem device={{ GLOBAL_EFS_ID }}.efs.{{ region_found }}.amazonaws.com:/ERS10 directory=/usr/sap/SD1/ERS10 fstype=nfs4 options="nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport" force_unmount=safe --group rsc_ERS10_group
+  when: 
+    - not sapers_fs_topology_name in resource_output.stdout
+    - ansible_default_ipv4.address != GLOBAL_PRIMARY_IP
+
+- name: Register ASCS instance
+  command: pcs resource create {{ sapascs_config_name }} SAPInstance InstanceName="SD1_ASCS00_demo-ascs" START_PROFILE=/sapmnt/SD1/profile/SD1_ASCS00_demo-ascs AUTOMATIC_RECOVER=false --group rsc_ASCS00_group meta resource-stickness=3000 op monitor interval=20s on-fail=restart timeout=60s op start interval=0s timeout=600s op stop interval=0s timeout=600s
+  when: 
+    - not sapascs_config_name in resource_output.stdout
+    - ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
+  
+- name: Register ERS instance
+  command: pcs resource create {{ sapers_config_name }} SAPInstance InstanceName="SD1_ERS10_demo-ers" START_PROFILE=/sapmnt/SD1/profile/SD1_ERS10_demo-ers AUTOMATIC_RECOVER=false --group rsc_ERS10_group op monitor interval=20s on-fail=restart timeout=60s op start interval=0s timeout=600s op stop interval=0s timeout=600s
+  when: 
+    - not sapers_config_name in resource_output.stdout
+    - ansible_default_ipv4.address != GLOBAL_PRIMARY_IP
+
+#Create Constraints
+- name: Create constraint order1
+  command: pcs constraint order start rsc_ASCS00_group then start rsc_ERS10_group symmetrical=false kind=Optional
+  when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
+
+- name: Create constraint order2
+  command: pcs constraint order start rsc_ASCS00_group then stop rsc_ERS10_group symmetrical=false kind=Optional
+  when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
+
+- name: Create constraint colocation
+  command: pcs constraint colocation add rsc_ERS10_group with rsc_ASCS00_group -5000
+  when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
+
+#Remove the cluster from maintenance mode
+- name: Remove maintenance
+  command: pcs property set maintenance-mode=false
+  when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
