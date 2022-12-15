@@ -15,7 +15,7 @@
   with_items:
     - /sapmnt/{{ GLOBAL_ASCS_SID | upper }}
     - /usr/sap
-    - /usr/sap/SD1/ASCS00
+    - /usr/sap/SD1/ERS10
     - /usr/sap/trans
 
 - name: Install ERS
