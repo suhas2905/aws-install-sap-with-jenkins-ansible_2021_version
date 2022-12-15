@@ -68,13 +68,13 @@
 # Create the resources
 
 - name: Create ASCS OIP
-  command: pcs resource create {{ ascs_oip_config_name }} aws-vpc-move-ip ip=192.168.10.11 interface=eth0 routing_table={{ ASCS_GLOBAL_OVERLAY_IP_ROUTE_TABLE_ID }} --group rsc_ASCS00_group
+  command: pcs resource create {{ ascs_oip_config_name }} aws-vpc-move-ip ip=192.168.10.11 interface=eth0 routing_table={{ GLOBAL_ASCS_OVERLAY_IP_ROUTE_TABLE_ID }} --group rsc_ASCS00_group
   when: 
     - not ascs_oip_config_name in resource_output.stdout
     - ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
 
 - name: Create ERS OIP
-  command: pcs resource create {{ ers_oip_config_name }} aws-vpc-move-ip ip=192.168.10.12 interface=eth0 routing_table={{ ERS_GLOBAL_OVERLAY_IP_ROUTE_TABLE_ID }} --group rsc_ERS10_group
+  command: pcs resource create {{ ers_oip_config_name }} aws-vpc-move-ip ip=192.168.10.12 interface=eth0 routing_table={{ GLOBAL_ERS_OVERLAY_IP_ROUTE_TABLE_ID }} --group rsc_ERS10_group
   when: 
     - not ers_oip_config_name in resource_output.stdout
     - ansible_default_ipv4.address != GLOBAL_PRIMARY_IP

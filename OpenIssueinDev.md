@@ -60,6 +60,9 @@ Prepare ERS files has been deleted from the ERS installation prepare_ers_files.y
     recurse: yes
   when: GLOBAL_PRODUCT_TO_INSTALL == "ERS"
 
+Known 7
+Global overlay IP variable
+
 
 
 
