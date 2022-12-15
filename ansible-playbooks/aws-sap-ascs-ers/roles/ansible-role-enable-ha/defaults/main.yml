@@ -12,3 +12,15 @@ suse_packages:
   - corosync
   - pcs
   - pacemaker
+
+#Overlay IP
+ascs_oip_config_name: "rsc_vip_ascs00"
+ers_oip_config_name: "rsc_vip_ers10"
+
+#FileSystem
+sapascs_fs_topology_name: "rsc_fs_ascs00"
+sapers_fs_topology_name: "rsc_fs_ers10"
+
+#Instance
+sapascs_config_name: "rsc_ascs00"
+sapers_config_name: "rsc_ers10"
