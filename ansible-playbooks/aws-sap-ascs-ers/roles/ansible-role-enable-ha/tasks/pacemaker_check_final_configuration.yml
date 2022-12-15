@@ -3,10 +3,12 @@
 - name: Wait up to 5 minutes for all configurations to be finished
   command: pcs status
   register: pcs_status
-  failed_when: '"Starting" in pcs_status.stdout or "Stopped" in pcs_status.stdout'
+  failed_when: '"Starting" in pcs_status.stdout'
+  #failed_when: '"Starting" in pcs_status.stdout or "Stopped" in pcs_status.stdout'
   retries: 100
   delay: 3
-  until: 'not "Starting" in pcs_status.stdout and not "Stopped" in pcs_status.stdout'
+  #until: 'not "Starting" in pcs_status.stdout and not "Stopped" in pcs_status.stdout'
+  until: 'not "Starting" in pcs_status.stdout'
 
 - name: Fail if nodes are not configured
   fail:
