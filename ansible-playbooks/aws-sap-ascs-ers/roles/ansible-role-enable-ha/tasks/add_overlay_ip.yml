@@ -7,19 +7,19 @@
 
 - name: Check if opposite IP is already an overlay
   command: ip address
-  register: current_ips
+  register: currrent_ips
 
 - name: Add Overlay IP as overlay when there's no overlay
   command: ip address add 192.168.10.11/32 dev eth0
   when: 
     - ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
-    - 'not "192.168.10.11" in current_ips.stdout'
+    - 'not "192.168.10.11" in currrent_ips.stdout'
 
 - name: Add Overlay IP as overlay when there's no overlay
   command: ip address add 192.168.10.12/32 dev eth0
   when:
     - ansible_default_ipv4.address != GLOBAL_PRIMARY_IP
-    - 'not "192.168.10.12" in current_ips.stdout'
+    - 'not "192.168.10.12" in currrent_ips.stdout'
 #- name: Check if Overlay IP is present
 #  command: ip address
 #  register: current_ips
@@ -28,24 +28,3 @@
 #  fail:
 #    msg: "Failed adding {{ GLOBAL_OVERLAY_IP }} as an overlay to primary node"
 #  when: not GLOBAL_OVERLAY_IP in current_ips.stdout
-
-
-
-
-
-- name: Check if opposite IP is already an overlay
-  command: ip address
-  register: current_ips
-
-- name: Add Overlay IP as overlay when there's no overlay
-  command: ip address add {{ GLOBAL_OVERLAY_IP }} dev eth0
-  when: not GLOBAL_OVERLAY_IP in current_ips.stdout
-
-- name: Check if Overlay IP is present
-  command: ip address
-  register: current_ips
-
-- name: Fail if IP was not added as overlay
-  fail:
-    msg: "Failed adding {{ GLOBAL_OVERLAY_IP }} as an overlay to primary node"
-  when: not GLOBAL_OVERLAY_IP in current_ips.stdout

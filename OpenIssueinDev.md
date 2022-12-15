@@ -39,7 +39,7 @@ Known 5
 /ASCS
 /ERS
 
-Known 6
+Known 6 -- Resolved
 Prepare ERS files has been deleted from the ERS installation prepare_ers_files.yml
 ---
 
@@ -62,6 +62,15 @@ Prepare ERS files has been deleted from the ERS installation prepare_ers_files.y
 
 Known 7
 Global overlay IP variable
+resources variable
+Instance number
+	ASCS
+	ERS
+SID
+	ASCS
+	ERS
+SD1_ERS10_demo -- demo name for ASCS ERS
+
 
 
 
