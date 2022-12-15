@@ -11,9 +11,14 @@
 - name: Fail if nodes are not configured
   fail:
     msg: "Configuration for nodes failed. Check the output of pcs status"
-  when: 'not "2 nodes configured" in pcs_status.stdout'
+  when: 'not "6 resource instances configured" in pcs_status.stdout'
 
 - name: Fail if at least one resource/stonith/constraints/orders configurations failed
   fail:
     msg: "Configuration for resources failed. Check the output of pcs status"
   when: '"Failed Resource Actions" in pcs_status.stdout'
+
+#Remove the cluster from maintenance mode
+- name: Remove maintenance
+  command: pcs property set maintenance-mode=false
+  when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP

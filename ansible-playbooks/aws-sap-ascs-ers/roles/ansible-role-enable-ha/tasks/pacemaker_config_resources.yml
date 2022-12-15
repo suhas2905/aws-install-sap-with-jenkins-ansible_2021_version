@@ -115,8 +115,3 @@
 - name: Create constraint colocation
   command: pcs constraint colocation add rsc_ERS10_group with rsc_ASCS00_group -5000
   when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
-
-#Remove the cluster from maintenance mode
-- name: Remove maintenance
-  command: pcs property set maintenance-mode=false
-  when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
