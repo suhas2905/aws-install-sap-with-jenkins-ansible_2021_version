@@ -58,7 +58,16 @@ if [ -z "$ers_overlay_route_table_id" ]; then
     echo "No ID for the overlay IP route table was found for Hana. Please check Terraform step"
     exit 105
 fi
-
+ascs_overlay_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ascs_instance_overlay_ip)
+if [ -z "$ascs_overlay_ip" ]; then
+    echo "No overlay IP was found for ASCS. Please check Terraform step"
+    exit 104
+fi
+ers_overlay_ip=$(terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" output -json ers_instance_overlay_ip)
+if [ -z "$ers_overlay_ip" ]; then
+    echo "No overlay IP was found for ERS. Please check Terraform step"
+    exit 104
+fi
 # ------------------------------------------------------------------
 # Change host destination on hosts.yml file
 # ------------------------------------------------------------------
@@ -104,7 +113,8 @@ echo "ERS_PRIVATE_IP: $ers_private_ip" >> $VAR_FILE_FULL_PATH
 echo "ERS_HOSTNAME: $ERS_INSTANCES_NAME_CHKD" >> $VAR_FILE_FULL_PATH
 echo "ASCS_OVERLAY_IP_ROUTE_TABLE_ID: $ascs_overlay_route_table_id" >> $VAR_FILE_FULL_PATH
 echo "ERS_OVERLAY_IP_ROUTE_TABLE_ID: $ers_overlay_route_table_id" >> $VAR_FILE_FULL_PATH
-
+echo "ASCS_OVERLAY_IP: $ascs_overlay_ip" >> $VAR_FILE_FULL_PATH
+echo "ERS_OVERLAY_IP: $ers_overlay_ip" >> $VAR_FILE_FULL_PATH
 
 if [[ "$ENABLE_HA_CHKD" == "true" ]]; then
     echo "HA_PRIMARY_PRIVATE_IP: $ascs_private_ip" >> $VAR_FILE_FULL_PATH
