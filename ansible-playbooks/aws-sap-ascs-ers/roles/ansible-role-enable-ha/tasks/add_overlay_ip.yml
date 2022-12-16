@@ -1,25 +1,27 @@
 ---
 
-#- name: Fail if no overlay IP is found
-#  fail:
-#    msg: "No variable with the Overlay IP was found. Check your input and try again"
-#  when: GLOBAL_OVERLAY_IP is undefined
+- name: Fail if no overlay IP is found
+  fail:
+    msg: "No variable with the Overlay IP was found. Check your input and try again"
+  when: 
+    - GLOBAL_OVERLAY_IP_ASCS is undefined
+    - GLOBAL_OVERLAY_IP_ERS is undefined
 
 - name: Check if opposite IP is already an overlay
   command: ip address
   register: currrent_ips
 
 - name: Add Overlay IP as overlay when there's no overlay
-  command: ip address add 192.168.10.11/32 dev eth0
+  command: ip address add {{ GLOBAL_OVERLAY_IP_ASCS }} dev eth0
   when: 
     - ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
-    - 'not "192.168.10.11" in currrent_ips.stdout'
+    - 'not {{ GLOBAL_OVERLAY_IP_ASCS }} in currrent_ips.stdout'
 
 - name: Add Overlay IP as overlay when there's no overlay
-  command: ip address add 192.168.10.12/32 dev eth0
+  command: ip address add {{ GLOBAL_OVERLAY_IP_ERS }}dev eth0
   when:
     - ansible_default_ipv4.address != GLOBAL_PRIMARY_IP
-    - 'not "192.168.10.12" in currrent_ips.stdout'
+    - 'not {{ GLOBAL_OVERLAY_IP_ERS }}in currrent_ips.stdout'
 #- name: Check if Overlay IP is present
 #  command: ip address
 #  register: current_ips
