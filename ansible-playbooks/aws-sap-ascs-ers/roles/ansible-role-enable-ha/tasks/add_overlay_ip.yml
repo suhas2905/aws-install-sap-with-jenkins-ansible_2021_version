@@ -18,7 +18,7 @@
     - not GLOBAL_OVERLAY_IP_ASCS in currrent_ips.stdout
 
 - name: Add Overlay IP as overlay when there's no overlay
-  command: ip address add {{ GLOBAL_OVERLAY_IP_ERS }}dev eth0
+  command: ip address add {{ GLOBAL_OVERLAY_IP_ERS }} dev eth0
   when:
     - ansible_default_ipv4.address != GLOBAL_PRIMARY_IP
     - not GLOBAL_OVERLAY_IP_ERS in currrent_ips.stdout
