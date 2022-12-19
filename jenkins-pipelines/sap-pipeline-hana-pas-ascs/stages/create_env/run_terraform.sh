@@ -5,7 +5,7 @@
 
 terraform -chdir="$PWD/$TERRAFORM_FOLDER_NAME" \
                 init \
-                -backend-config "bucket=sap-install-bucket-811495sfsafas" \
+                -backend-config "bucket=$BUCKET_NAME_CHKD" \
                 -backend-config "key=environment.tfstate" \
                 -backend-config "region=$AWS_REGION_CHKD" \
                 -backend-config "access_key=$AWS_ACCOUNT_CREDENTIALS_USR" \
