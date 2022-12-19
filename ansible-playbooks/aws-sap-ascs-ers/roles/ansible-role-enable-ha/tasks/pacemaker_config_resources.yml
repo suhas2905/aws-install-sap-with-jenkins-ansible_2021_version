@@ -68,50 +68,50 @@
 # Create the resources
 
 - name: Create ASCS OIP
-  command: pcs resource create {{ ascs_oip_config_name }} aws-vpc-move-ip ip={{ GLOBAL_OVERLAY_IP_ASCS[:-3] }} interface=eth0 routing_table={{ GLOBAL_ASCS_OVERLAY_IP_ROUTE_TABLE_ID }} --group rsc_ASCS00_group
+  command: pcs resource create {{ ascs_oip_config_name }}{{GLOBAL_ASCS_INSTANCE_NUMBER}} aws-vpc-move-ip ip={{ GLOBAL_OVERLAY_IP_ASCS[:-3] }} interface=eth0 routing_table={{ GLOBAL_ASCS_OVERLAY_IP_ROUTE_TABLE_ID }} --group rsc_ASCS{{GLOBAL_ASCS_INSTANCE_NUMBER}}_group
   when: 
     - not ascs_oip_config_name in resource_output.stdout
     - ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
 
 - name: Create ERS OIP
-  command: pcs resource create {{ ers_oip_config_name }} aws-vpc-move-ip ip={{ GLOBAL_OVERLAY_IP_ERS[:-3] }} interface=eth0 routing_table={{ GLOBAL_ERS_OVERLAY_IP_ROUTE_TABLE_ID }} --group rsc_ERS10_group
+  command: pcs resource create {{ ers_oip_config_name }}{{GLOBAL_ERS_INSTANCE_NUMBER}} aws-vpc-move-ip ip={{ GLOBAL_OVERLAY_IP_ERS[:-3] }} interface=eth0 routing_table={{ GLOBAL_ERS_OVERLAY_IP_ROUTE_TABLE_ID }} --group rsc_ERS{{GLOBAL_ERS_INSTANCE_NUMBER}}_group
   when: 
     - not ers_oip_config_name in resource_output.stdout
     - ansible_default_ipv4.address != GLOBAL_PRIMARY_IP
 
 - name: Register ASCS FS
-  command: pcs resource create {{ sapascs_fs_topology_name }} Filesystem device={{ GLOBAL_EFS_ID }}.efs.{{ region_found }}.amazonaws.com:/ASCS00 directory=/usr/sap/SD1/ASCS00 fstype=nfs4 options="nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport" force_unmount=safe --group rsc_ASCS00_group
+  command: pcs resource create {{ sapascs_fs_topology_name }}{{GLOBAL_ASCS_INSTANCE_NUMBER}} Filesystem device={{ GLOBAL_EFS_ID }}.efs.{{ region_found }}.amazonaws.com:/ASCS{{GLOBAL_ASCS_INSTANCE_NUMBER}} directory=/usr/sap/{{GLOBAL_ASCS_SID}}/ASCS{{GLOBAL_ASCS_INSTANCE_NUMBER}} fstype=nfs4 options="nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport" force_unmount=safe --group rsc_ASCS{{GLOBAL_ASCS_INSTANCE_NUMBER}}_group
   when: 
     - ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
     - not sapascs_fs_topology_name in resource_output.stdout
 
 - name: Register ERS FS
-  command: pcs resource create {{ sapers_fs_topology_name }} Filesystem device={{ GLOBAL_EFS_ID }}.efs.{{ region_found }}.amazonaws.com:/ERS10 directory=/usr/sap/SD1/ERS10 fstype=nfs4 options="nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport" force_unmount=safe --group rsc_ERS10_group
+  command: pcs resource create {{ sapers_fs_topology_name }}{{GLOBAL_ERS_INSTANCE_NUMBER}} Filesystem device={{ GLOBAL_EFS_ID }}.efs.{{ region_found }}.amazonaws.com:/ERS{{GLOBAL_ERS_INSTANCE_NUMBER}} directory=/usr/sap/{{GLOBAL_ASCS_SID}}/ERS{{GLOBAL_ERS_INSTANCE_NUMBER}} fstype=nfs4 options="nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport" force_unmount=safe --group rsc_ERS{{GLOBAL_ERS_INSTANCE_NUMBER}}_group
   when: 
     - not sapers_fs_topology_name in resource_output.stdout
     - ansible_default_ipv4.address != GLOBAL_PRIMARY_IP
 
 - name: Register ASCS instance
-  command: pcs resource create {{ sapascs_config_name }} SAPInstance InstanceName="SD1_ASCS00_demo-ascs" START_PROFILE=/sapmnt/SD1/profile/SD1_ASCS00_demo-ascs AUTOMATIC_RECOVER=false --group rsc_ASCS00_group meta resource-stickness=3000 op monitor interval=20s on-fail=restart timeout=60s op start interval=0s timeout=600s op stop interval=0s timeout=600s
+  command: pcs resource create {{ sapascs_config_name }}{{GLOBAL_ASCS_INSTANCE_NUMBER}} SAPInstance InstanceName="{{GLOBAL_ASCS_SID}}_ASCS{{GLOBAL_ASCS_INSTANCE_NUMBER}}_{{GLOBAL_ASCS_HOSTNAME}}" START_PROFILE=/sapmnt/{{GLOBAL_ASCS_SID}}/profile/{{GLOBAL_ASCS_SID}}_ASCS00_{{GLOBAL_ASCS_HOSTNAME}} AUTOMATIC_RECOVER=false --group rsc_ASCS{{GLOBAL_ASCS_INSTANCE_NUMBER}}_group meta resource-stickness=3000 op monitor interval=20s on-fail=restart timeout=60s op start interval=0s timeout=600s op stop interval=0s timeout=600s
   when: 
     - not sapascs_config_name in resource_output.stdout
     - ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
   
 - name: Register ERS instance
-  command: pcs resource create {{ sapers_config_name }} SAPInstance InstanceName="SD1_ERS10_demo-ers" START_PROFILE=/sapmnt/SD1/profile/SD1_ERS10_demo-ers AUTOMATIC_RECOVER=false --group rsc_ERS10_group op monitor interval=20s on-fail=restart timeout=60s op start interval=0s timeout=600s op stop interval=0s timeout=600s
+  command: pcs resource create {{ sapers_config_name }}{{GLOBAL_ERS_INSTANCE_NUMBER}} SAPInstance InstanceName="{{GLOBAL_ASCS_SID}}_ERS{{GLOBAL_ERS_INSTANCE_NUMBER}}_{{GLOBAL_ERS_HOSTNAME}}" START_PROFILE=/sapmnt/{{GLOBAL_ASCS_SID}}/profile/{{GLOBAL_ASCS_SID}}_ERS{{GLOBAL_ERS_INSTANCE_NUMBER}}_{{GLOBAL_ERS_HOSTNAME}} AUTOMATIC_RECOVER=false --group rsc_ERS{{GLOBAL_ERS_INSTANCE_NUMBER}}_group op monitor interval=20s on-fail=restart timeout=60s op start interval=0s timeout=600s op stop interval=0s timeout=600s
   when: 
     - not sapers_config_name in resource_output.stdout
     - ansible_default_ipv4.address != GLOBAL_PRIMARY_IP
 
 #Create Constraints
 - name: Create constraint order1
-  command: pcs constraint order start rsc_ASCS00_group then start rsc_ERS10_group symmetrical=false kind=Optional
+  command: pcs constraint order start rsc_ASCS{{GLOBAL_ASCS_INSTANCE_NUMBER}}_group then start rsc_ERS{{GLOBAL_ERS_INSTANCE_NUMBER}}_group symmetrical=false kind=Optional
   when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
 
 - name: Create constraint order2
-  command: pcs constraint order start rsc_ASCS00_group then stop rsc_ERS10_group symmetrical=false kind=Optional
+  command: pcs constraint order start rsc_ASCS{{GLOBAL_ASCS_INSTANCE_NUMBER}}_group then stop rsc_ERS{{GLOBAL_ERS_INSTANCE_NUMBER}}_group symmetrical=false kind=Optional
   when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
 
 - name: Create constraint colocation
-  command: pcs constraint colocation add rsc_ERS10_group with rsc_ASCS00_group -5000
+  command: pcs constraint colocation add rsc_ERS{{GLOBAL_ERS_INSTANCE_NUMBER}}_group with rsc_ASCS{{GLOBAL_ASCS_INSTANCE_NUMBER}}_group -5000
   when: ansible_default_ipv4.address == GLOBAL_PRIMARY_IP
