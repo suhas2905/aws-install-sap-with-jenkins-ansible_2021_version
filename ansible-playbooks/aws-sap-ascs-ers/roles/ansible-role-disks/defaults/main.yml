@@ -45,5 +45,5 @@ swap_disk_type_pattern:
   - xvdg
 
 #Variables for ASCS and ERS EFS
-ascs_folder: /usr/sap/SD1/ASCS00
-ers_folder: /usr/sap/SD1/ERS10
+ascs_folder: /usr/sap/{{ GLOBAL_ASCS_SID }}/ASCS{{GLOBAL_ASCS_INSTANCE_NUMBER}}
+ers_folder: /usr/sap/{{ GLOBAL_ERS_SID }}/ERS{{GLOBAL_ERS_INSTANCE_NUMBER}}
