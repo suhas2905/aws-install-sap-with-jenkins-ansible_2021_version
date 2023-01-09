@@ -9,7 +9,7 @@
 aws s3 ls $BUCKET_NAME_CHKD --profile "$CLI_PROFILE_CHKD" > /dev/null
 
 if [ $? -ne 0 ]; then
-    aws s3api create-bucket --bucket $BUCKET_NAME_CHKD --profile "$CLI_PROFILE_CHKD"
+    aws s3api create-bucket --bucket $BUCKET_NAME_CHKD --profile "$CLI_PROFILE_CHKD" --LocationConstraint=$AWS_REGION
 
     if [ $? -ne 0 ]; then
         echo "There was an error creating your default bucket: $BUCKET_NAME_CHKD"
